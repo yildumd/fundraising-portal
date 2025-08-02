@@ -3,7 +3,7 @@ import { useDarkMode } from '../context/DarkModeContext';
 import { FiSearch, FiDownload } from 'react-icons/fi';
 
 const leaderboardData = [
-  { id: 1, name: "Yildum David Jonah", code: "yildum2025", donations: 1250, trend: "up" },
+  { id: 1, name: "Yildum David Jonah", code: "yildum2025", donations: 750, trend: "up" },
   { id: 2, name: "Jane Doe", code: "jane2025", donations: 520, trend: "down" },
   { id: 3, name: "John Smith", code: "john2025", donations: 420, trend: "up" },
   { id: 4, name: "Alex Johnson", code: "alex2025", donations: 380, trend: "up" },

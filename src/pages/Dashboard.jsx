@@ -5,11 +5,11 @@ import RewardCard from '../components/RewardCard';
 import ActivityFeed from '../components/ActivityFeed';
 import CopyToClipboard from '../components/CopyToClipboard';
 
-// Default data structure
+// Default data structure - now matches API response format
 const DEFAULT_DATA = {
   name: "David Yildum",
   referralCode: "yildum2025",
-  amountRaised: 750,  // Your specified amount
+  amountRaised: 1250,  // Changed to match your API response
   rewards: ["Bronze Badge", "Early Supporter"]
 };
 
