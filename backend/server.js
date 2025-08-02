@@ -7,8 +7,8 @@ const PORT = process.env.PORT || 5000;  // Critical change for Render
 // Configure CORS for both local dev and production
 app.use(cors({
   origin: [
-    "http://localhost:5173",         // Local development
-    "https://your-vercel-app.vercel.app"  // Your live frontend URL
+    "http://localhost:5173",                      // Local dev
+    "https://fundraising-portal.vercel.app"       // Your Vercel frontend (replace with actual URL)
   ]
 }));
 
