@@ -1,29 +1,36 @@
-// This sets up a Node.js server with Express
-const express = require('express'); // Import Express
-const cors = require('cors'); // Import CORS (to allow React to connect)
+const express = require('express');
+const cors = require('cors');
 
-const app = express(); // Create the Express app
-const PORT = 5000; // The backend will run on port 5000
+const app = express();
+const PORT = process.env.PORT || 5000;  // Critical change for Render
 
-// Allow requests from your React frontend (running on port 5173)
+// Configure CORS for both local dev and production
 app.use(cors({
-  origin: "http://localhost:5173" 
+  origin: [
+    "http://localhost:5173",         // Local development
+    "https://your-vercel-app.vercel.app"  // Your live frontend URL
+  ]
 }));
 
-// Mock data for your intern dashboard
+// Mock data
 const userData = {
   name: "David Yildum",
-  referralCode: "yildum2025", // Your custom referral code
-  amountRaised: 1250, // Example fundraising amount
-  rewards: ["Bronze Badge", "Early Supporter"] // Example rewards
+  referralCode: "yildum2025",
+  amountRaised: 1250,
+  rewards: ["Bronze Badge", "Early Supporter"]
 };
 
-// Create the API endpoint
+// API endpoint
 app.get('/api/user', (req, res) => {
-  res.json(userData); // Send the mock data as JSON
+  res.json(userData);
 });
 
-// Start the server
+// Health check endpoint (required by Render)
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
+// Start server
 app.listen(PORT, () => {
-  console.log(`Backend server is running at http://localhost:${PORT}`);
+  console.log(`Backend server running on port ${PORT}`);
 });
