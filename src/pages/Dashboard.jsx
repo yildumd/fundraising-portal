@@ -11,12 +11,20 @@ export default function Dashboard() {
   const { darkMode } = useDarkMode();
 
   useEffect(() => {
-    // Simulate API call with delay
     const timer = setTimeout(() => {
-      fetch("/user.json")
+      fetch("https://fundraising-backend-v4np.onrender.com/api/user") // Updated to your Render URL
         .then((res) => res.json())
         .then((data) => {
           setUser(data);
+          setLoading(false);
+        })
+        .catch(() => {
+          // Fallback if API fails
+          setUser({
+            name: "David Yildum",
+            referralCode: "yildum2025",
+            donations: 1250
+          });
           setLoading(false);
         });
     }, 800);
@@ -46,10 +54,26 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className={`min-h-screen p-6 ${darkMode ? 'bg-gray-800 text-gray-100' : 'bg-gray-50 text-gray-800'}`}>
+    <div className={`min-h-screen p-4 sm:p-6 ${darkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-900'}`}>
+      {/* Mobile Header (Collapsed) */}
+      <div className="md:hidden mb-4">
+        <h1 className="text-2xl font-bold">Welcome, {user.name.split(' ')[0]} 👋</h1>
+        <div className="flex items-center justify-between mt-2">
+          <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            Raised: ${user.donations.toLocaleString()}
+          </p>
+          <div className="flex items-center space-x-2">
+            <span className="font-mono px-2 py-1 text-xs rounded bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+              {user.referralCode}
+            </span>
+            <CopyToClipboard text={user.referralCode} />
+          </div>
+        </div>
+      </div>
+
       <div className="max-w-6xl mx-auto">
-        {/* Header Section */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+        {/* Desktop Header (Hidden on mobile) */}
+        <div className="hidden md:flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
           <div>
             <h1 className="text-3xl font-bold mb-1">Welcome back, {user.name} 👋</h1>
             <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
@@ -66,47 +90,49 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Stats and Progress Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          <div className="lg:col-span-2">
-            <div className={`p-6 rounded-xl shadow ${darkMode ? 'bg-gray-700' : 'bg-white'}`}>
-              <h2 className="text-xl font-semibold mb-4">Your Impact</h2>
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+          {/* Left Column */}
+          <div className="lg:col-span-2 space-y-4 md:space-y-6">
+            {/* Progress Section */}
+            <div className={`p-4 md:p-6 rounded-xl shadow-lg ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+              <h2 className="text-xl font-semibold mb-3 md:mb-4">Your Impact</h2>
               <ProgressBar 
                 current={user.donations} 
                 goal={5000} 
                 darkMode={darkMode}
               />
-              <div className="flex justify-between mt-4">
+              <div className="grid grid-cols-3 gap-2 mt-4">
                 <div>
-                  <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Raised</p>
-                  <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+                  <p className={`text-xs md:text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Raised</p>
+                  <p className="text-lg md:text-2xl font-bold text-green-600 dark:text-green-400">
                     ${user.donations.toLocaleString()}
                   </p>
                 </div>
-                <div>
-                  <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Goal</p>
-                  <p className="text-2xl font-bold">$5,000</p>
+                <div className="text-center">
+                  <p className={`text-xs md:text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Goal</p>
+                  <p className="text-lg md:text-2xl font-bold">$5,000</p>
                 </div>
-                <div>
-                  <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Remaining</p>
-                  <p className="text-2xl font-bold">
+                <div className="text-right">
+                  <p className={`text-xs md:text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Remaining</p>
+                  <p className="text-lg md:text-2xl font-bold">
                     ${(5000 - user.donations).toLocaleString()}
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Recent Activity Section */}
-            <div className={`mt-6 p-6 rounded-xl shadow ${darkMode ? 'bg-gray-700' : 'bg-white'}`}>
-              <h2 className="text-xl font-semibold mb-4">Recent Activity</h2>
+            {/* Recent Activity */}
+            <div className={`p-4 md:p-6 rounded-xl shadow-lg ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+              <h2 className="text-xl font-semibold mb-3 md:mb-4">Recent Activity</h2>
               <ActivityFeed activities={recentActivity} darkMode={darkMode} />
             </div>
           </div>
 
-          {/* Rewards Section */}
-          <div className={`p-6 rounded-xl shadow ${darkMode ? 'bg-gray-700' : 'bg-white'}`}>
-            <h2 className="text-xl font-semibold mb-4">Your Rewards</h2>
-            <div className="grid grid-cols-2 gap-4">
+          {/* Right Column (Rewards) */}
+          <div className={`p-4 md:p-6 rounded-xl shadow-lg ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+            <h2 className="text-xl font-semibold mb-3 md:mb-4">Your Rewards</h2>
+            <div className="grid grid-cols-2 gap-3">
               {rewards.map((reward) => (
                 <RewardCard 
                   key={reward.id}
@@ -115,13 +141,15 @@ export default function Dashboard() {
                 />
               ))}
             </div>
-            <div className="mt-6">
-              <button 
-                className={`w-full py-2 px-4 rounded-lg font-medium ${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'} text-white transition-colors`}
-              >
-                Share Your Progress
-              </button>
-            </div>
+            <button 
+              className={`w-full mt-4 py-2 px-4 rounded-lg font-medium ${
+                darkMode 
+                  ? 'bg-blue-600 hover:bg-blue-700' 
+                  : 'bg-blue-500 hover:bg-blue-600'
+              } text-white transition-colors`}
+            >
+              Share Progress
+            </button>
           </div>
         </div>
       </div>
